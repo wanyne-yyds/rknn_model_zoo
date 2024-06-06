@@ -2,13 +2,13 @@ import sys
 
 from rknn.api import RKNN
 
-DATASET_PATH = '../../../datasets/COCO/coco_subset_20.txt'
+DATASET_PATH = '/mnt/e/Code/rknn/rknn_model_zoo/datasets/COCO/coco_subset_20.txt'
 DEFAULT_RKNN_PATH = '../model/yolov5.rknn'
 DEFAULT_QUANT = True
 
 def parse_arg():
     if len(sys.argv) < 3:
-        print("Usage: python3 {} onnx_model_path [platform] [dtype(optional)] [output_rknn_path(optional)]".format(sys.argv[0]));
+        print("Usage: python3 {} onnx_model_path [platform] [dtype(optional)] [output_rknn_path(optional)]".format(sys.argv[0]))
         print("       platform choose from [rk3562,rk3566,rk3568,rk3588]")
         print("       dtype choose from    [i8, fp]")
         exit(1)
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     model_path, platform, do_quant, output_path = parse_arg()
 
     # Create RKNN object
-    rknn = RKNN(verbose=False)
+    rknn = RKNN(verbose=True)
 
     # Pre-process config
     print('--> Config model')

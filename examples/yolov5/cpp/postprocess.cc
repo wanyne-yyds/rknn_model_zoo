@@ -261,8 +261,9 @@ static int process_i8_rv1106(int8_t *input, int *anchor, int grid_h, int grid_w,
                       std::vector<float> &boxes, std::vector<float> &boxScores, std::vector<int> &classId, float threshold,
                       int32_t zp, float scale) {
     int validCount = 0;
+    printf("threshold=%f, zp=%d, scale=%f\n", threshold, zp, scale);
     int8_t thres_i8 = qnt_f32_to_affine(threshold, zp, scale);
-
+    printf("thres_i8=%d\n", thres_i8);
     int anchor_per_branch = 3;
     int align_c = PROP_BOX_SIZE * anchor_per_branch;
 
@@ -272,7 +273,11 @@ static int process_i8_rv1106(int8_t *input, int *anchor, int grid_h, int grid_w,
                 int hw_offset = h * grid_w * align_c + w * align_c + a * PROP_BOX_SIZE;
                 int8_t *hw_ptr = input + hw_offset;
                 int8_t box_confidence = hw_ptr[4];
+                // float box_conf_f322 = deqnt_affine_to_f32(box_confidence, zp, scale);
+                // float thres_f322 = deqnt_affine_to_f32(thres_i8, zp, scale);
 
+                // printf("box_confidence=%d, box_confidence_float=%f, thres_i8=%d, thres_float=%f\n", 
+                // box_confidence, box_conf_f322, thres_i8, thres_f322);
                 if (box_confidence >= thres_i8) {
                     int8_t maxClassProbs = hw_ptr[5];
                     int maxClassId = 0;

@@ -1,6 +1,7 @@
 #!/bin/bash
-
 set -e
+
+GCC_COMPILER="/mnt/e/Code/rknn/arm-rockchip830-linux-uclibcgnueabihf/bin/arm-rockchip830-linux-uclibcgnueabihf"
 
 echo "$0 $@"
 while getopts ":t:a:d:b:m" opt; do

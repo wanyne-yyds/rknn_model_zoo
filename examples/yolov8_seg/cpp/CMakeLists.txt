@@ -9,6 +9,12 @@ if (ENABLE_ASAN)
 	set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 endif ()
 
+set(rknpu2_yolov8_seg_file rknpu2/yolov8_seg.cc)
+if (TARGET_SOC STREQUAL "rv1106" OR TARGET_SOC STREQUAL "rv1103")
+    add_definitions(-DRV1106_1103)
+    set(rknpu2_yolov8_obb_file rknpu2/yolov8_seg_rv1106_1103.cc)
+endif()
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/ 3rdparty.out)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../utils/ utils.out)
 
@@ -46,7 +52,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/allocator/drm)
 add_executable(${PROJECT_NAME}
     main.cc
     postprocess.cc
-    rknpu2/yolov8_seg.cc
+    ${rknpu2_yolov8_seg_file}
 )
 
 target_link_libraries(${PROJECT_NAME}

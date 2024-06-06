@@ -3,7 +3,8 @@ import sys
 import numpy as np
 from rknn.api import RKNN
 
-DATASET_PATH = '../../../datasets/COCO/coco_subset_20.txt'
+# DATASET_PATH = '../../../datasets/COCO/coco_subset_20.txt'
+DATASET_PATH = '/mnt/e/Code/rknn/rknn_model_zoo/datasets/Lane_Dataset/datasets.txt'
 
 if __name__ == '__main__':
 
