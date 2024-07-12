@@ -236,17 +236,17 @@ int inference_yolov8_obb_model(rknn_app_context_t *app_ctx, image_buffer_t *img,
 
     // Run
     printf("rknn_run\n");
-    while (true)
-    {       
-        gettimeofday(&tv1, NULL);
-        ret = rknn_run(app_ctx->rknn_ctx, nullptr);
-        gettimeofday(&tv2, NULL);
-        printf("rknn_run time: %ld ms\n", (tv2.tv_sec-tv1.tv_sec)*1000 + (tv2.tv_usec-tv1.tv_usec)/1000);
-        if (ret < 0) {
-            printf("rknn_run fail! ret=%d\n", ret);
-            return -1;
-        }
-    }
+    // while (true)
+    // {       
+    //     gettimeofday(&tv1, NULL);
+    //     ret = rknn_run(app_ctx->rknn_ctx, nullptr);
+    //     gettimeofday(&tv2, NULL);
+    //     printf("rknn_run time: %ld ms\n", (tv2.tv_sec-tv1.tv_sec)*1000 + (tv2.tv_usec-tv1.tv_usec)/1000);
+    //     if (ret < 0) {
+    //         printf("rknn_run fail! ret=%d\n", ret);
+    //         return -1;
+    //     }
+    // }
     
     gettimeofday(&tv1, NULL);
     ret = rknn_run(app_ctx->rknn_ctx, nullptr);

@@ -10,10 +10,10 @@
 #define OBJ_NAME_MAX_SIZE 64
 #define OBJ_NUMB_MAX_SIZE 128
 #define OBJ_CLASS_NUM 4
-#define NMS_THRESH 0.45
+#define NMS_THRESH 0.10
 #define BOX_THRESH 0.25
 #define PROP_BOX_SIZE (5 + OBJ_CLASS_NUM)
-
+	
 struct Object {
 	float xmin;
 	float xmax;
@@ -37,6 +37,12 @@ struct Point {
 	Point operator*(const float coeff) const { return Point(x * coeff, y * coeff); }
 };
 
+struct RotatedBox {
+    Point center;
+    float width, height;
+    float angle;  // in degrees
+};
+
 typedef struct {
     Point ptsl[4];
     float prob;
@@ -53,6 +59,6 @@ int init_post_process();
 void deinit_post_process();
 const char *coco_cls_to_name(int cls_id);
 int post_process(rknn_app_context_t *app_ctx, void *outputs, letterbox_t *letter_box, float conf_threshold, float nms_threshold, object_detect_result_list *od_results);
-
+Point intersection(const Point& a, const Point& b, const Point& c, const Point& d);
 void deinitPostProcess();
 #endif //_RKNN_YOLOV8_OBB_DEMO_POSTPROCESS_H_

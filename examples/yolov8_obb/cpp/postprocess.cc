@@ -66,6 +66,15 @@ static char *readLine(FILE *fp, char *buffer, int *len)
     return buffer;
 }
 
+void removeNewline(char* str) {
+    while (*str) {
+        if (*str == '\n' || *str == '\r') {
+            *str = '\0';
+        }
+        str++;
+    }
+}
+
 static int readLines(const char *fileName, char *lines[], int max_line)
 {
     FILE *file = fopen(fileName, "r");
@@ -81,6 +90,7 @@ static int readLines(const char *fileName, char *lines[], int max_line)
 
     while ((s = readLine(file, s, &n)) != NULL)
     {
+        removeNewline(s);
         lines[i++] = s;
         if (i >= max_line)
             break;
@@ -364,11 +374,14 @@ static void nms_sorted_bboxes(const std::vector<Object> & objects, std::vector<i
 
 			// intersection over union
 			//float inter_area = intersection_area(a, b);
-			auto inter_area = rotated_boxes_intersection(a, b);
+			float inter_area = rotated_boxes_intersection(a, b);
 			float union_area = areas[i] + areas[picked[j]] - inter_area;
 			float IoU = inter_area / union_area;
-			if (inter_area / union_area > nms_threshold)
+			if (IoU > nms_threshold)
+            {
 				keep = 0;
+                break;
+            }
 		}
 
 		if (keep)

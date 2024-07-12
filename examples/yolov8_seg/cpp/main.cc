@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     rknn_app_context_t rknn_app_ctx;
     memset(&rknn_app_ctx, 0, sizeof(rknn_app_context_t));
 
-    // init_post_process();
+    init_post_process();
 
     ret = init_yolov8_seg_model(model_path, &rknn_app_ctx);
     if (ret != 0)
@@ -95,52 +95,52 @@ int main(int argc, char **argv)
     }
 
     // draw mask
-    // if (od_results.count >= 1)
-    // {
-    //     int width = src_image.width;
-    //     int height = src_image.height;
-    //     char *ori_img = (char *)src_image.virt_addr;
-    //     int cls_id = od_results.results[0].cls_id;
-    //     uint8_t *seg_mask = od_results.results_seg[0].seg_mask;
-    //     float alpha = 0.5f; // opacity
-    //     for (int j = 0; j < height; j++)
-    //     {
-    //         for (int k = 0; k < width; k++)
-    //         {
-    //             int pixel_offset = 3 * (j * width + k);
-    //             if (seg_mask[j * width + k] != 0)
-    //             {
-    //                 ori_img[pixel_offset + 0] = (unsigned char)clamp(class_colors[seg_mask[j * width + k] % N_CLASS_COLORS][0] * (1 - alpha) + ori_img[pixel_offset + 0] * alpha, 0, 255); // r
-    //                 ori_img[pixel_offset + 1] = (unsigned char)clamp(class_colors[seg_mask[j * width + k] % N_CLASS_COLORS][1] * (1 - alpha) + ori_img[pixel_offset + 1] * alpha, 0, 255); // g
-    //                 ori_img[pixel_offset + 2] = (unsigned char)clamp(class_colors[seg_mask[j * width + k] % N_CLASS_COLORS][2] * (1 - alpha) + ori_img[pixel_offset + 2] * alpha, 0, 255); // b
-    //             }
-    //         }
-    //     }
-    //     free(seg_mask);
-    // }
+    if (od_results.count >= 1)
+    {
+        int width = src_image.width;
+        int height = src_image.height;
+        char *ori_img = (char *)src_image.virt_addr;
+        int cls_id = od_results.results[0].cls_id;
+        uint8_t *seg_mask = od_results.results_seg[0].seg_mask;
+        float alpha = 0.5f; // opacity
+        for (int j = 0; j < height; j++)
+        {
+            for (int k = 0; k < width; k++)
+            {
+                int pixel_offset = 3 * (j * width + k);
+                if (seg_mask[j * width + k] != 0)
+                {
+                    ori_img[pixel_offset + 0] = (unsigned char)clamp(class_colors[seg_mask[j * width + k] % N_CLASS_COLORS][0] * (1 - alpha) + ori_img[pixel_offset + 0] * alpha, 0, 255); // r
+                    ori_img[pixel_offset + 1] = (unsigned char)clamp(class_colors[seg_mask[j * width + k] % N_CLASS_COLORS][1] * (1 - alpha) + ori_img[pixel_offset + 1] * alpha, 0, 255); // g
+                    ori_img[pixel_offset + 2] = (unsigned char)clamp(class_colors[seg_mask[j * width + k] % N_CLASS_COLORS][2] * (1 - alpha) + ori_img[pixel_offset + 2] * alpha, 0, 255); // b
+                }
+            }
+        }
+        free(seg_mask);
+    }
 
     // draw boxes
-    // char text[256];
-    // for (int i = 0; i < od_results.count; i++)
-    // {
-    //     object_detect_result *det_result = &(od_results.results[i]);
-    //     printf("%s @ (%d %d %d %d) %.3f\n", coco_cls_to_name(det_result->cls_id),
-    //            det_result->box.left, det_result->box.top,
-    //            det_result->box.right, det_result->box.bottom,
-    //            det_result->prop);
-    //     int x1 = det_result->box.left;
-    //     int y1 = det_result->box.top;
-    //     int x2 = det_result->box.right;
-    //     int y2 = det_result->box.bottom;
+    char text[256];
+    for (int i = 0; i < od_results.count; i++)
+    {
+        object_detect_result *det_result = &(od_results.results[i]);
+        printf("%s @ (%d %d %d %d) %.3f\n", coco_cls_to_name(det_result->cls_id),
+               det_result->box.left, det_result->box.top,
+               det_result->box.right, det_result->box.bottom,
+               det_result->prop);
+        int x1 = det_result->box.left;
+        int y1 = det_result->box.top;
+        int x2 = det_result->box.right;
+        int y2 = det_result->box.bottom;
 
-    //     draw_rectangle(&src_image, x1, y1, x2 - x1, y2 - y1, COLOR_RED, 3);
-    //     sprintf(text, "%s %.1f%%", coco_cls_to_name(det_result->cls_id), det_result->prop * 100);
-    //     draw_text(&src_image, text, x1, y1 - 16, COLOR_BLUE, 10);
-    // }
-    // write_image("out.png", &src_image);
+        draw_rectangle(&src_image, x1, y1, x2 - x1, y2 - y1, COLOR_RED, 3);
+        sprintf(text, "%s %.1f%%", coco_cls_to_name(det_result->cls_id), det_result->prop * 100);
+        draw_text(&src_image, text, x1, y1 - 16, COLOR_BLUE, 10);
+    }
+    write_image("out.png", &src_image);
 
 out:
-    // deinit_post_process();
+    deinit_post_process();
 
     ret = release_yolov8_seg_model(&rknn_app_ctx);
     if (ret != 0)
